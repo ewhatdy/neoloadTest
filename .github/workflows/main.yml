@@ -15,6 +15,10 @@ jobs:
           - api_url: https://neoload-api.saas.neotys.com/
             token: 2f8f8d5350bce046acab341628d480f2306b3ad200cf44fb
     steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v2
+    
       - name: "Start Controller and LGs"
         run: docker-compose -f nlweb-infra-scale.yml up --scale nlw-lg=2 --remove-orphans
         
