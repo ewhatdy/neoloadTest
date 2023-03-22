@@ -15,10 +15,15 @@ jobs:
           - api_url: https://neoload-api.saas.neotys.com/
             token: 2f8f8d5350bce046acab341628d480f2306b3ad200cf44fb
     steps:
+      - name: "Start Controller and LGs"
+        run: docker-compose -f nlweb-infra-scale.yml up --scale nlw-lg=2 --remove-orphans
+        
       - name: "Install NeoLoad CLI"
         run: pip3 install -U neoload
+        
       - name: "NeoLoad Login"
         run: neoload login --url ${{ matrix.api_url }} --workspace ${{ env.WORKSPACE_NAME }} ${{ matrix.token }}
+        
       - name: "NeoLoad run test"
         run: >
           neoload run 
@@ -27,3 +32,7 @@ jobs:
           --name "Demo app regression test - Github build ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --description "Example of CI performance regression job started from Github, targeting a specific user path in the demo application." 
           ${{ env.TEST_NAME }}
+          
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f nlweb-infra-scale.yml down
