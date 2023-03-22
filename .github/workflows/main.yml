@@ -1,4 +1,4 @@
-name: NeoLoad Demo App Regression Test
+name: NeoLoad test
 on: workflow_dispatch
 env:
   TEST_NAME: '"Test"'
