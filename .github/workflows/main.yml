@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - api_url: https://neoload-api-eu.saas.neotys.com/
+          - api_url: https://neoload.saas.neotys.com/
             token: 2f8f8d5350bce046acab341628d480f2306b3ad200cf44fb
     steps:
       - name: "Install NeoLoad CLI"
