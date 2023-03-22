@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  nlw-controller:
+    container_name: nlw-controller
+    hostname: docker-ubuntu-sandpit
+    image: neotys/neoload-controller:9.2.1
+    volumes:
+      - C:\tmp\neoload:/host
+    environment:
+      AGENT_XMX: -Xmx1024m
+    env_file:
+      - ./nlweb-controller.env
+      - ./nlweb.env
+    links:
+      - nlw-lg1
+    networks:
+      - nlw
+  nlw-lg1:
+    container_name: nlw-lg1
+    hostname: docker-ubuntu-sandpit
+    image: neotys/neoload-loadgenerator:9.2.1
+    ports:
+      - 7104:7100
+    environment:
+      LG_HOST: docker01-ubuntu-sandpit
+      LG_PORT: 7104
+    env_file:
+      - ./nlweb.env
+    networks:
+      - nlw
+networks:
+  nlw:
+
