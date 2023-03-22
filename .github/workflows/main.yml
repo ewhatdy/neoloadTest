@@ -12,13 +12,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - api_url: https://neoload.saas.neotys.com/
+          - api_url: https://neoload-api.saas.neotys.com/
             token: 2f8f8d5350bce046acab341628d480f2306b3ad200cf44fb
     steps:
       - name: "Install NeoLoad CLI"
         run: pip3 install -U neoload
       - name: "NeoLoad Login"
-        run: neoload login --url ${{ matrix.api_url }} ${{ matrix.token }}
+        run: neoload login --url ${{ matrix.api_url }} --workspace ${{ env.WORKSPACE_NAME }} ${{ matrix.token }}
       - name: "NeoLoad run test"
         run: >
           neoload run 
