@@ -6,7 +6,7 @@ services:
     hostname: docker-ubuntu-sandpit
     image: neotys/neoload-controller:9.2.1
     volumes:
-      - C:\tmp\neoload:/host
+      - /tmp/neoloadTest:/host
     environment:
       AGENT_XMX: -Xmx1024m
     env_file:
