@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v2
     
       - name: "Start Controller and LGs"
-        run: docker-compose -f nlweb-infra-scale.yml up --scale nlw-lg=2 --remove-orphans
+        run: docker-compose -f nlweb-infra-scale.yml up --detach --scale nlw-lg=2 --remove-orphans
         
       - name: "Install NeoLoad CLI"
         run: pip3 install -U neoload
