@@ -4,6 +4,8 @@ env:
   TEST_NAME: '"NeoloadPOC"'
   WORKSPACE_NAME: '"Evolution"'
   VERSION: '9.2.1'
+  NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
+
 jobs:
   nightly_build_demo_app:
     name: Neoload POC
@@ -29,7 +31,7 @@ jobs:
         run: pip3 install -U neoload
         
       - name: "NeoLoad Login"
-        run: neoload login --url ${{ matrix.api_url }} --workspace ${{ env.WORKSPACE_NAME }} ${{ matrix.token }}
+        run: neoload login --url ${{ matrix.api_url }} --workspace ${{ env.WORKSPACE_NAME }} ${{ env.NEOLOADWEB_TOKEN }}
         
       - name: "NeoLoad run test"
         run: >
