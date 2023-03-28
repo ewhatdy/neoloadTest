@@ -15,7 +15,6 @@ jobs:
       matrix:
         include:
           - api_url: https://neoload-api.saas.neotys.com/
-            token: ${{ secrets.NEOLOADWEB_TOKEN }}
     steps:
     
       - name: Checkout
