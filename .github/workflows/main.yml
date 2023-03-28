@@ -1,19 +1,19 @@
 name: NeoLoad test
 on: workflow_dispatch
 env:
-  TEST_NAME: '"Test"'
-  WORKSPACE_NAME: '"Default Workspace"'
-  VERSION: '8.42'
+  TEST_NAME: '"NeoloadPOC"'
+  WORKSPACE_NAME: '"Evolution"'
+  VERSION: '9.2.1'
 jobs:
   nightly_build_demo_app:
-    name: Nightly build demo application
+    name: Neoload POC
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         include:
           - api_url: https://neoload-api.saas.neotys.com/
-            token: 2f8f8d5350bce046acab341628d480f2306b3ad200cf44fb
+            token: ${{ secrets.NEOLOADWEB_TOKEN }}
     steps:
     
       - name: Checkout
@@ -23,7 +23,7 @@ jobs:
         run: docker-compose -f nlweb-infra-scale.yml up --detach --scale nlw-lg=2 --remove-orphans
       
       - name: "Wait for infrastructure"
-        run: sleep 60
+        run: sleep 30
         
       - name: "Install NeoLoad CLI"
         run: pip3 install -U neoload
@@ -37,9 +37,19 @@ jobs:
           --external-url $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID 
           --external-url-label "Github Action Run ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --name "Demo app regression test - Github build ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
-          --description "Example of CI performance regression job started from Github, targeting a specific user path in the demo application." 
+          --description "Neoload POC" 
           ${{ env.TEST_NAME }}
           
       - name: Stop containers
         if: always()
         run: docker-compose -f nlweb-infra-scale.yml down
+        
+      - name: "Generate Test Report"
+        run: neoload test-results junitsla
+
+      - name: "Publish Test Report"
+        if: ${{ always() }}
+        uses: scacap/action-surefire-report@v1
+        with:
+          report_paths: junit-sla.xml
+          fail_on_test_failures: true
