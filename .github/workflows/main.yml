@@ -24,7 +24,7 @@ jobs:
         
       - name: Credential
         run: |
-          echo "Hello" | base64 > ./nlweb.env
+          echo ${{ secrets.CREDENTIAL }} | base64 > ./nlweb.env
           cat ./nlweb.env
     
       - name: "Start Controller and LGs"
