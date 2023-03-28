@@ -6,6 +6,7 @@ env:
   VERSION: '9.2.1'
   NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
   ZONE: ${{ secrets.ZONE }}
+  CREDENTIAL: ${{ secrets.CREDENTIAL }}
 
 jobs:
   nightly_build_demo_app:
@@ -22,7 +23,7 @@ jobs:
         uses: actions/checkout@v2
         
       - name: Credential
-        run: echo "Hello"
+        run: echo ${{ env.CREDENTIAL }} | base64 -d > ./nlweb.env
         shell: bash
     
       - name: "Start Controller and LGs"
