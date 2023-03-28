@@ -20,6 +20,9 @@ jobs:
     
       - name: Checkout
         uses: actions/checkout@v2
+        
+      - name: Credential
+        run: echo ${{ secrets.CREDENTIAL }} | base64 -d > ./nlweb.env
     
       - name: "Start Controller and LGs"
         run: docker-compose -f nlweb-infra-scale.yml up --scale nlw-lg=2 --remove-orphans
