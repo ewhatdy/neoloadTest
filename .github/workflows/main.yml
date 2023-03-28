@@ -24,7 +24,7 @@ jobs:
         run: docker-compose -f nlweb-infra-scale.yml up --detach --scale nlw-lg=2 --remove-orphans
       
       - name: "Wait for infrastructure"
-        run: sleep 30
+        run: sleep 60
         
       - name: "Install NeoLoad CLI"
         run: pip3 install -U neoload
