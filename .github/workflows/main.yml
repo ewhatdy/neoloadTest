@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v2
         
       - name: Credential
-        run: echo ${{ secrets.CREDENTIAL }} | base64 -d > ./nlweb.env
+        run: echo "Hello"
         shell: bash
     
       - name: "Start Controller and LGs"
