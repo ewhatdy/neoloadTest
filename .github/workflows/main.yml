@@ -46,10 +46,6 @@ jobs:
           --name "Demo app regression test - Github build ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --description "Neoload POC" 
           ${{ env.TEST_NAME }}
-          
-      - name: Stop containers
-        if: always()
-        run: docker-compose -f nlweb-infra-scale.yml down
         
       - name: "Generate Test Report"
         run: neoload test-results junitsla
@@ -60,3 +56,7 @@ jobs:
         with:
           report_paths: junit-sla.xml
           fail_on_test_failures: true
+          
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f nlweb-infra-scale.yml down
