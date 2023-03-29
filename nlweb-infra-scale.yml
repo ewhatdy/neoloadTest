@@ -8,7 +8,7 @@ services:
     volumes:
       - /tmp/neoloadTest:/host
     environment:
-      AGENT_XMX: -Xmx1024m
+      AGENT_XMX: -Xmx800m
     env_file:
       - ./nlweb-controller.env
       - ./nlweb.env
@@ -16,12 +16,23 @@ services:
       - nlw-lg
     networks:
       - nlw
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1024M
   nlw-lg:
     image: neotys/neoload-loadgenerator:9.2.1
+    environment:
+      AGENT_XMX: -Xmx800m
     env_file:
       - ./nlweb.env
     networks:
       - nlw
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1024M
 networks:
   nlw:
-
