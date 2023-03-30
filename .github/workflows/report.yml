@@ -5,13 +5,13 @@ on:
       guid:
         required: true
         type: string
-  env:
-    TEST_NAME: '"NeoloadPOC"'
-    WORKSPACE_NAME: '"Evolution"'
-    VERSION: '9.2.1'
-    NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
-    ZONE: ${{ secrets.ZONE }}
-    CREDENTIAL: ${{ secrets.CREDENTIAL }}
+env:
+  TEST_NAME: '"NeoloadPOC"'
+  WORKSPACE_NAME: '"Evolution"'
+  VERSION: '9.2.1'
+  NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
+  ZONE: ${{ secrets.ZONE }}
+  CREDENTIAL: ${{ secrets.CREDENTIAL }}
 
 
 jobs:
