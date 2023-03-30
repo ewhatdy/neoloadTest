@@ -1,8 +1,7 @@
 name: NeoLoad report
 on: workflow_dispatch
-  inputs:
-      guid:
-        required: true
+  inputs guid:
+    required: true
 env:
   TEST_NAME: '"NeoloadPOC"'
   WORKSPACE_NAME: '"Evolution"'
