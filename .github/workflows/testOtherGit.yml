@@ -3,7 +3,7 @@ on: workflow_dispatch
 jobs:
   neoload_poc:
     permissions: write-all
-    name: Neoload POC
+    name: test
     runs-on: ubuntu-latest
     steps:
     
