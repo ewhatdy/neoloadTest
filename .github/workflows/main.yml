@@ -24,10 +24,6 @@ jobs:
           echo ${{ secrets.CREDENTIAL }} | base64 -d > ./nlweb.env
     
       - name: "Start Controller and LGs"
-        env:
-          NEOLOADWEB_URL: https://neoload-api.saas.neotys.com/
-          NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
-          ZONE: ${{ secrets.ZONE }}
         run: docker-compose -f nlweb-infra-scale.yml up --scale nlw-lg=2 --remove-orphans -d
         
       - name: "Wait for infrastructure"
