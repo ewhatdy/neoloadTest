@@ -57,7 +57,7 @@ jobs:
           path: raw_data_${{ github.event.inputs.guid }}.json
         
       - name: "Generate transaction data"
-        run: neoload report --json-in raw_data.json --template builtin:transactions-csv --out-file transactions_${{ github.event.inputs.guid }}.csv
+        run: neoload report --json-in raw_data_${{ github.event.inputs.guid }}.json --template builtin:transactions-csv --out-file transactions_${{ github.event.inputs.guid }}.csv
         
       - name: "Upload Transaction data"
         uses: actions/upload-artifact@v3
@@ -66,7 +66,7 @@ jobs:
           path: transactions_${{ github.event.inputs.guid }}.csv
           
       - name: "Generate HTML Report"
-        run: neoload report --json-in raw_data.json --template jinja/sample-custom-report.html.j2 --out-file report_${{ github.event.inputs.guid }}.html
+        run: neoload report --json-in raw_data_${{ github.event.inputs.guid }}.json --template jinja/sample-custom-report.html.j2 --out-file report_${{ github.event.inputs.guid }}.html
         
       - name: "Upload HTML Report"
         uses: actions/upload-artifact@v3
