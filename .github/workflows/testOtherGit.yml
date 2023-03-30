@@ -15,7 +15,7 @@ jobs:
         with:
           repository: boitcex/testNeoloadGit
           path: ./ElegantNetworkingRoot
-          token: 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
+          token: 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
           
       - name: Show Working directory
         run: ls
