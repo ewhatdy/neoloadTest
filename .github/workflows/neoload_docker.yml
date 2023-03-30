@@ -1,7 +1,7 @@
 name: NeoLoad docker
 on: workflow_dispatch
 env:
-  TEST_NAME: '"NeoloadPOC Docker"'
+  TEST_NAME: '"NeoloadPOC"'
   WORKSPACE_NAME: '"Evolution"'
   VERSION: '9.2.1'
 
@@ -40,7 +40,7 @@ jobs:
           --external-url $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID 
           --external-url-label "Github Action Run ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --name "Docker Test - Github build ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
-          --description "Neoload POC" 
+          --description "Neoload POC Docker" 
           ${{ env.TEST_NAME }}
         
       - name: "Generate Test Report"
