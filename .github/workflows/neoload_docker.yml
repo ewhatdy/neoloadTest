@@ -44,7 +44,7 @@ jobs:
           ${{ env.TEST_NAME }}
         
       - name: "Generate Test Report"
-        run: neoload test-results --junit-file  ${{ github.workspace }}/junit-sla.xml junitsla
+        run: neoload test-results junitsla
 
       - name: "Publish Test Report"
         if: always()
