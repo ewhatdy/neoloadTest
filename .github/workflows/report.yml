@@ -1,0 +1,77 @@
+name: NeoLoad report
+on: workflow_dispatch
+  inputs:
+      guid:
+        required: true
+env:
+  TEST_NAME: '"NeoloadPOC"'
+  WORKSPACE_NAME: '"Evolution"'
+  VERSION: '9.2.1'
+  NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
+  ZONE: ${{ secrets.ZONE }}
+  CREDENTIAL: ${{ secrets.CREDENTIAL }}
+
+
+jobs:
+  nightly_build_demo_app:
+    name: Neoload POC
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - api_url: https://neoload-api.saas.neotys.com/
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Prepare Credentials
+        run: |
+          echo ${{ secrets.CREDENTIAL }} | base64 -d > ./nlweb.env
+    
+      - name: "Start Controller and LGs"
+        run: docker-compose -f nlweb-infra-scale.yml up --detach --scale nlw-lg=2 --remove-orphans
+      
+      - name: "Wait for infrastructure"
+        run: sleep 60
+        
+      - name: "Install NeoLoad CLI"
+        run: pip3 install -U neoload
+        
+      - name: "NeoLoad Login"
+        run: neoload login --url ${{ matrix.api_url }} --workspace ${{ env.WORKSPACE_NAME }} ${{ env.NEOLOADWEB_TOKEN }}
+             
+      - name: "Generate Raw data"
+        run: neoload use ${{ github.event.inputs.guid }}
+        run: neoload report --out-file raw_data.json
+        run: neoload report --json-in raw_data.json --template builtin:transactions-json --out-file transactions.json
+        
+      - name: "Generate HTML Reports"
+        run: neoload report --json-in raw_data.json --template sample-custom-report.html.j2 --out-file report.html
+
+
+
+      - name: "Publish Test Report"
+        if: ${{ always() }}
+        uses: scacap/action-surefire-report@v1
+        with:
+          report_paths: raw_data.json
+          fail_on_test_failures: true
+
+      - name: Step 1 - Create a temporary artifact downloads folder
+        run: mkdir downloads
+        
+      - name: step 2 - Add artifacts to publish to the temp folder
+        run: |
+          cd downloads
+          cat raw_data.json > alpha.html
+          cat report.html > report.html
+          cat transactions.json > transactions.json
+          cd ..
+    
+      - name: Step 3 - Use the Upload Artifact GitHub Action
+        uses: actions/upload-artifact@v2
+        with: 
+          name: assets-for-download
+          path: downloads
