@@ -32,11 +32,11 @@ jobs:
         run: |
           echo ${{ secrets.CREDENTIAL }} | base64 -d > ./nlweb.env
     
-      - name: "Start Controller and LGs"
-        run: docker-compose -f nlweb-infra-scale.yml up --detach --scale nlw-lg=2 --remove-orphans
+#       - name: "Start Controller and LGs"
+#         run: docker-compose -f nlweb-infra-scale.yml up --detach --scale nlw-lg=2 --remove-orphans
       
-      - name: "Wait for infrastructure"
-        run: sleep 60
+#       - name: "Wait for infrastructure"
+#         run: sleep 60
         
       - name: "Install NeoLoad CLI"
         run: pip3 install -U neoload
@@ -49,6 +49,12 @@ jobs:
         
       - name: "Generate Raw data"
         run: neoload report --out-file raw_data.json
+        
+      - name: "Upload Raw data"
+        uses: actions/upload-artifact@v3
+        with:
+          name: Raw_data
+          path: raw_data.json
         
       - name: "Generate transaction data"
         run: neoload report --json-in raw_data.json --template builtin:transactions-json --out-file transactions.json
