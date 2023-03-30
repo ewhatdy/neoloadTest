@@ -1,4 +1,4 @@
-name: NeoLoad test
+name: Test Multi git
 on: workflow_dispatch
 jobs:
   neoload_poc:
