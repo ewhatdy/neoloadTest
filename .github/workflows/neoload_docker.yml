@@ -55,6 +55,7 @@ jobs:
           fail_on_test_failures: true
         
       - name: 'Upload Artifact'
+        if: always()
         uses: actions/upload-artifact@v3
         with:
             name: performance_report
