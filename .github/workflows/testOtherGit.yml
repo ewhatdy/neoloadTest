@@ -19,8 +19,8 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN_GITHUB }}
           
       - name: Show Working directory REPO FLOW
-        run: ls ${{ github.workspace }}/flow
+        run: ls -lah ${{ github.workspace }}/flow
         
       - name: Show Working directory REPO SCRIPTS
-        run: ls ${{ github.workspace }}/scripts
+        run: ls -lah ${{ github.workspace }}/scripts
     
