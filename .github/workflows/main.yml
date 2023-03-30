@@ -9,7 +9,8 @@ env:
   CREDENTIAL: ${{ secrets.CREDENTIAL }}
 
 jobs:
-  nightly_build_demo_app:
+  neoload_poc:
+    permissions: write-all
     name: Neoload POC
     runs-on: ubuntu-latest
     strategy:
