@@ -54,3 +54,9 @@ jobs:
           report_paths:  junit-sla.xml
           fail_on_test_failures: true
         
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v3
+        with:
+            name: performance_report
+            path: junit-sla.xml
+            retention-days: 5
