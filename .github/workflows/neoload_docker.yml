@@ -1,7 +1,7 @@
 name: NeoLoad docker
 on: workflow_dispatch
 env:
-  TEST_NAME: '"NeoloadPOC"'
+  TEST_NAME: '"NeoloadPOC Docker"'
   WORKSPACE_NAME: '"Evolution"'
   VERSION: '9.2.1'
 
@@ -24,15 +24,15 @@ jobs:
         run: |
           pip3 install -U neoload
           neoload docker install
-          
+        
+      - name: "NeoLoad Login"
+        run: neoload login --url ${{ env.NEOLOADWEB_URL}} --workspace ${{ env.WORKSPACE_NAME }} ${{ env.NEOLOADWEB_TOKEN }}
+        
       - name: "Set agents and controllers"
         run: |
           neoload config set docker.lg.default_count=2
           neoload config set docker.zone=${{ secrets.NEOLOADWEB_ZONE }}
           neoload docker up
-        
-      - name: "NeoLoad Login"
-        run: neoload login --url ${{ env.NEOLOADWEB_URL}} --workspace ${{ env.WORKSPACE_NAME }} ${{ env.NEOLOADWEB_TOKEN }}
         
       - name: "NeoLoad run test"
         run: >
