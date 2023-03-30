@@ -60,7 +60,7 @@ jobs:
         run: neoload report --json-in raw_data.json --template builtin:transactions-json --out-file transactions.json
         
       - name: "Generate HTML Reports"
-        run: neoload report --json-in raw_data.json --template sample-custom-report.html.j2 --out-file report.html
+        run: neoload report --json-in raw_data.json --template jinja/sample-custom-report.html.j2 --out-file report.html
 
 
 
