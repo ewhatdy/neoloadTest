@@ -3,15 +3,11 @@ version: '3'
 services:
   nlw-controller:
     container_name: nlw-controller
-    hostname: docker-ubuntu-sandpit
     image: neotys/neoload-controller:9.2.1
     volumes:
       - /tmp/neoloadTest:/host
     environment:
       AGENT_XMX: -Xmx800m
-    env_file:
-      - ./nlweb-controller.env
-      - ./nlweb.env
     links:
       - nlw-lg
     networks:
@@ -25,8 +21,6 @@ services:
     image: neotys/neoload-loadgenerator:9.2.1
     environment:
       AGENT_XMX: -Xmx800m
-    env_file:
-      - ./nlweb.env
     networks:
       - nlw
     deploy:
