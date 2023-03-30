@@ -1,0 +1,17 @@
+name: NeoLoad test
+on: workflow_dispatch
+jobs:
+  neoload_poc:
+    permissions: write-all
+    name: Neoload POC
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Check out my other private repo
+        uses: actions/checkout@master
+        with:
+          repository: boitcex/testNeoloadGit.git
+          token: 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
