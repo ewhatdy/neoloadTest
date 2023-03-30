@@ -75,12 +75,13 @@ jobs:
           path: report_${{ github.event.inputs.guid }}.html
 
 
-  - name: "Upload All"
+      - name: "Upload All"
         uses: actions/upload-artifact@v3
         with:
           name: all
-          path: raw_data_${{ github.event.inputs.guid }}.json
-          path: transactions_${{ github.event.inputs.guid }}.csv
-          path: report_${{ github.event.inputs.guid }}.html
+          path: |
+            raw_data_${{ github.event.inputs.guid }}.json
+            transactions_${{ github.event.inputs.guid }}.csv
+            report_${{ github.event.inputs.guid }}.html
 
  
