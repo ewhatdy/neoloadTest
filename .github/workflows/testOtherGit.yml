@@ -8,6 +8,8 @@ jobs:
     
       - name: CHECKOUT MAIN REPO where workflow located
         uses: actions/checkout@v3
+        with:
+          path: ./flow
 
       - name: CHECKOUT REPO 2 in the same workflow
         uses: actions/checkout@v3
@@ -16,9 +18,9 @@ jobs:
           path: ./scripts
           token: ${{ secrets.ACCESS_TOKEN_GITHUB }}
           
-      - name: Show Working directory REPO
-        run: ls ${{ github.workspace }}/scripts
+      - name: Show Working directory REPO FLOW
+        run: ls ${{ github.workspace }}/flow
         
-      - name: Show Working directory REPO2
-        run: ls ${{ github.workspace }}
+      - name: Show Working directory REPO SCRIPTS
+        run: ls ${{ github.workspace }}/scripts
     
