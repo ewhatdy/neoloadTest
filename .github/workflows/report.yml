@@ -1,15 +1,17 @@
 name: NeoLoad report
-on: workflow_dispatch:
-  inputs:
-    guid:
-      required: true
-env:
-  TEST_NAME: '"NeoloadPOC"'
-  WORKSPACE_NAME: '"Evolution"'
-  VERSION: '9.2.1'
-  NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
-  ZONE: ${{ secrets.ZONE }}
-  CREDENTIAL: ${{ secrets.CREDENTIAL }}
+on: 
+  workflow_dispatch:
+    inputs:
+      guid:
+        required: true
+        type: string
+  env:
+    TEST_NAME: '"NeoloadPOC"'
+    WORKSPACE_NAME: '"Evolution"'
+    VERSION: '9.2.1'
+    NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
+    ZONE: ${{ secrets.ZONE }}
+    CREDENTIAL: ${{ secrets.CREDENTIAL }}
 
 
 jobs:
