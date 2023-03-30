@@ -26,7 +26,7 @@ services:
       AGENT_XMX: -Xmx800m
       NEOLOADWEB_URL: ${NEOLOADWEB_URL}
       NEOLOADWEB_TOKEN: ${NEOLOADWEB_TOKEN}
-      ZONE: ${NEOLOADWEB_ZONE}
+      NEOLOADWEB_ZONE: ${NEOLOADWEB_ZONE}
     networks:
       - nlw
     deploy:
