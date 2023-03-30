@@ -29,7 +29,7 @@ jobs:
         run: |
           neoload config set docker.lg.default_count=2
           neoload config set docker.zone=${{ secrets.NEOLOADWEB_ZONE }}
-          neoload docker up -d
+          neoload docker up
         
       - name: "NeoLoad Login"
         run: neoload login --url ${{ env.NEOLOADWEB_URL}} --workspace ${{ env.WORKSPACE_NAME }} ${{ env.NEOLOADWEB_TOKEN }}
@@ -55,4 +55,4 @@ jobs:
           
       - name: Stop containers
         if: always()
-        run: neoload docker down -d 
+        run: neoload docker down
