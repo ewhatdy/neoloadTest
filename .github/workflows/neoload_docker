@@ -1,0 +1,58 @@
+name: NeoLoad test
+on: workflow_dispatch
+env:
+  TEST_NAME: '"NeoloadPOC"'
+  WORKSPACE_NAME: '"Evolution"'
+  VERSION: '9.2.1'
+
+jobs:
+  neoload_poc:
+    permissions: write-all
+    name: Neoload POC
+    runs-on: ubuntu-latest
+    env:
+          NEOLOADWEB_URL: 'https://neoload-api.saas.neotys.com/'
+          NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
+          NEOLOADWEB_ZONE: ${{ secrets.NEOLOADWEB_ZONE }}
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+        
+      - name: "Install NeoLoad CLI"
+        run: |
+          pip3 install -U neoload
+          neoload docker install
+          
+      - name: "Set agents and controllers"
+        run: |
+          neoload config set docker.lg.default_count=2
+          neoload config set docker.zone=${{ secrets.NEOLOADWEB_ZONE }}
+          neoload docker up -d
+        
+      - name: "NeoLoad Login"
+        run: neoload login --url ${{ env.NEOLOADWEB_URL}} --workspace ${{ env.WORKSPACE_NAME }} ${{ env.NEOLOADWEB_TOKEN }}
+        
+      - name: "NeoLoad run test"
+        run: >
+          neoload run 
+          --external-url $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID 
+          --external-url-label "Github Action Run ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
+          --name "Docker Test - Github build ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
+          --description "Neoload POC" 
+          ${{ env.TEST_NAME }}
+        
+      - name: "Generate Test Report"
+        run: neoload test-results --junit-file  ${{ github.workspace }}/junit-sla.xml junitsla
+
+      - name: "Publish Test Report"
+        if: always()
+        uses: scacap/action-surefire-report@v1
+        with:
+          report_paths:  ${{ github.workspace }}/junit-sla.xml
+          fail_on_test_failures: true
+          
+      - name: Stop containers
+        if: always()
+        run: neoload docker down -d 
