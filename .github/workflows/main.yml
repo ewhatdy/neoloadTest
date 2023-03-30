@@ -28,7 +28,10 @@ jobs:
           NEOLOADWEB_URL: https://neoload-api.saas.neotys.com/
           NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
           ZONE: ${{ secrets.ZONE }}
-        run: docker-compose -f nlweb-infra-scale.yml up --detach --scale nlw-lg=2 --remove-orphans --wait
+        run: docker-compose -f nlweb-infra-scale.yml up --scale nlw-lg=2 --remove-orphans -d
+        
+      - name: "Wait for infrastructure"
+        run: sleep 60
         
       - name: "Install NeoLoad CLI"
         run: pip3 install -U neoload
