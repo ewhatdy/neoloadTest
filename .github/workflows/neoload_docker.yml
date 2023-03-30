@@ -1,4 +1,4 @@
-name: NeoLoad test
+name: NeoLoad docker
 on: workflow_dispatch
 env:
   TEST_NAME: '"NeoloadPOC"'
