@@ -6,7 +6,7 @@ env:
   VERSION: '9.2.1'
   NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
   NEOLOADWEB_URL: 'https://neoload-api.saas.neotys.com/'
-  ZONE: ${{ secrets.ZONE }}
+  NEOLOADWEB_ZONE: ${{ secrets.NEOLOADWEB_ZONE }}
   CREDENTIAL: ${{ secrets.CREDENTIAL }}
 
 jobs:
@@ -24,6 +24,10 @@ jobs:
           echo ${{ secrets.CREDENTIAL }} | base64 -d > ./nlweb.env
     
       - name: "Start Controller and LGs"
+        env:
+          NEOLOADWEB_URL: ${{ env.NEOLOADWEB_URL }}
+          NEOLOADWEB_TOKEN: ${{ env.NEOLOADWEB_TOKEN }}
+          NEOLOADWEB_ZONE: ${{ env.NEOLOADWEB_ZONE }}
         run: docker-compose -f nlweb-infra-scale.yml up --scale nlw-lg=2 --remove-orphans -d
         
       - name: "Wait for infrastructure"
