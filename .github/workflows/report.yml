@@ -48,42 +48,30 @@ jobs:
         run: neoload test-results use ${{ github.event.inputs.guid }}
         
       - name: "Generate Raw data"
-        run: neoload report --out-file raw_data.json
+        run: neoload report --out-file raw_data_${{ github.event.inputs.guid }}.json
         
       - name: "Upload Raw data"
         uses: actions/upload-artifact@v3
         with:
           name: Raw_data
-          path: raw_data.json
+          path: raw_data_${{ github.event.inputs.guid }}.json
         
       - name: "Generate transaction data"
-        run: neoload report --json-in raw_data.json --template builtin:transactions-json --out-file transactions.json
+        run: neoload report --json-in raw_data.json --template builtin:transactions-csv --out-file transactions_${{ github.event.inputs.guid }}.csv
         
-      - name: "Generate HTML Reports"
-        run: neoload report --json-in raw_data.json --template jinja/sample-custom-report.html.j2 --out-file report.html
-
-
-
-      - name: "Publish Test Report"
-        if: ${{ always() }}
-        uses: scacap/action-surefire-report@v1
+      - name: "Upload Transaction data"
+        uses: actions/upload-artifact@v3
         with:
-          report_paths: raw_data.json
-          fail_on_test_failures: true
-
-      - name: Step 1 - Create a temporary artifact downloads folder
-        run: mkdir downloads
+          name: transactions
+          path: transactions_${{ github.event.inputs.guid }}.csv
+          
+      - name: "Generate HTML Report"
+        run: neoload report --json-in raw_data.json --template jinja/sample-custom-report.html.j2 --out-file report_${{ github.event.inputs.guid }}.html
         
-      - name: step 2 - Add artifacts to publish to the temp folder
-        run: |
-          cd downloads
-          cat raw_data.json > alpha.html
-          cat report.html > report.html
-          cat transactions.json > transactions.json
-          cd ..
-    
-      - name: Step 3 - Use the Upload Artifact GitHub Action
-        uses: actions/upload-artifact@v2
-        with: 
-          name: assets-for-download
-          path: downloads
+      - name: "Upload HTML Report"
+        uses: actions/upload-artifact@v3
+        with:
+          name: report
+          path: report_${{ github.event.inputs.guid }}.html
+
+ 
