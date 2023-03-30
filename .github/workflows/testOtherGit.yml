@@ -13,5 +13,9 @@ jobs:
       - name: Check out my other private repo
         uses: actions/checkout@master
         with:
-          repository: boitcex/testNeoloadGit.git
+          repository: boitcex/testNeoloadGit
+          path: ./ElegantNetworkingRoot
           token: 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
+          
+      - name: Show Working directory
+        run: ls
