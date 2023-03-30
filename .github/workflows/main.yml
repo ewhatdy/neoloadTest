@@ -49,7 +49,7 @@ jobs:
         run: neoload test-results --junit-file  ${{ github.workspace }}/junit-sla.xml junitsla
 
       - name: "Publish Test Report"
-        if: ${{ always() }}
+        if: always()
         uses: scacap/action-surefire-report@v1
         with:
           report_paths:  ${{ github.workspace }}/junit-sla.xml
