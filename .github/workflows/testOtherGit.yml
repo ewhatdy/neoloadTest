@@ -12,16 +12,3 @@ jobs:
         with:
           submodules: 'true'
           token: ${{ secrets.ACCESS_TOKEN_GITHUB }}
-          
-        
-      - name: Check out my other private repo
-        uses: actions/checkout@v3
-        with:
-          repository: boitcex/testNeoloadGit
-          path: ./ElegantNetworkingRoot
-          token: ${{ secrets.ACCESS_TOKEN_GITHUB }}
-          
-      - name: Show Working directory
-        run: ls
-        
-  
