@@ -5,7 +5,6 @@ env:
   WORKSPACE_NAME: '"Evolution"'
   VERSION: '9.2.1'
   CREDENTIAL: ${{ secrets.CREDENTIAL }}
-  NEOLOADWEB_URL: 'https://neoload-api.saas.neotys.com/'
 
 jobs:
   neoload_poc:
@@ -13,7 +12,7 @@ jobs:
     name: Neoload POC
     runs-on: ubuntu-latest
     env:
-          NEOLOADWEB_URL: ${{ env.NEOLOADWEB_URL }}
+          NEOLOADWEB_URL: 'https://neoload-api.saas.neotys.com/'
           NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
           NEOLOADWEB_ZONE: ${{ secrets.NEOLOADWEB_ZONE }}
     steps:
