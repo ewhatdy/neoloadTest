@@ -25,7 +25,7 @@ jobs:
           echo ${{ secrets.CREDENTIAL }} | base64 -d > ./nlweb.env
     
       - name: "Start Controller and LGs"        
-        run: docker-compose -f nlweb-infra-scale.yml up --scale nlw-lg=2 --remove-orphans -d
+        run: docker-compose -f nlweb-infra-scale.yml up --scale nlw-lg=2 --remove-orphans -d -e NEOLOADWEB_URL=${{ env.NEOLOADWEB_TOKEN }} -e NEOLOADWEB_TOKEN=${{ env.NEOLOADWEB_TOKEN }} -e NEOLOADWEB_ZONE=${{ env.NEOLOADWEB_ZONE }}
         
       - name: "Wait for infrastructure"
         run: sleep 30
