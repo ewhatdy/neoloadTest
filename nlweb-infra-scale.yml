@@ -8,6 +8,9 @@ services:
       - /tmp/neoloadTest:/host
     environment:
       AGENT_XMX: -Xmx800m
+    env_file:
+      - ./nlweb-controller.env
+      - ./nlweb.env
     links:
       - nlw-lg
     networks:
@@ -21,6 +24,8 @@ services:
     image: neotys/neoload-loadgenerator:9.2.1
     environment:
       AGENT_XMX: -Xmx800m
+    env_file:
+      - ./nlweb.env
     networks:
       - nlw
     deploy:
