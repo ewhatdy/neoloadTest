@@ -8,7 +8,7 @@ env:
    # Neoload project repo variables
   ACCESS_TOKEN_GITHUB: ${{ secrets.ACCESS_TOKEN_GITHUB }} 
   PROJECT_REPO: 'boitcex/testNeoloadGit'
-  PROJECT_BRANCH: 'test'
+  PROJECT_BRANCH: 'test2'
   PROJECT_PATH: ${{ github.workspace }}/project
 
 jobs:
