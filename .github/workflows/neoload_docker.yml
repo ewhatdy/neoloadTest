@@ -50,7 +50,6 @@ jobs:
           --name "Docker Test - Github build ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --description "Neoload POC Docker" 
           ${{ env.TEST_NAME }}
-          --return-0
           
       - name: "echo run test"
         run:  echo "$GITHUB_OUTPUT"
