@@ -47,19 +47,16 @@ jobs:
       - name: "Add Test2"
         run: neoload test-results use ${{ github.event.inputs.guid2 }}
 
-      - name: "Compare tests"
-        run: neoload report --type=trends --template jinja/trends/transaction_trends.html.j2 --filter="results=${{ github.event.inputs.guid1 }}|${{ github.event.inputs.guid2 }}" --out-file transactions_trends.html
-
-      - name: "Compare tests"
-        run: neoload report --type=trends --template jinja/trends/general_details.html.j2 --filter="results=${{ github.event.inputs.guid1 }}|${{ github.event.inputs.guid2 }}" --out-file general_trends.html
-         
-
+      - name: "Compare tests1"
+#         run: neoload report --type=trends --template jinja/trends/transaction_trends.html.j2 --filter="results=${{ github.event.inputs.guid1 }}|${{ github.event.inputs.guid2 }}" --out-file transactions_trends.html
+        run: neoload report --type=trends --template jinja/sample-trends-report.html.j2 --filter="results=${{ github.event.inputs.guid1 }}|${{ github.event.inputs.guid2 }}" --out-file transactions_trends.html
+        
       - name: "Upload All"
         uses: actions/upload-artifact@v3
         with:
           name: all
           path: |
             transactions_trends.html
-            general_trends.html
-
  
+
+
