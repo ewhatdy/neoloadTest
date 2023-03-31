@@ -4,16 +4,19 @@ env:
   TEST_NAME: '"NeoloadPOC"'
   WORKSPACE_NAME: '"Evolution"'
   VERSION: '9.2.1'
+  NEOLOADWEB_URL: 'https://neoload-api.saas.neotys.com/'
+  NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
+  NEOLOADWEB_ZONE: ${{ secrets.NEOLOADWEB_ZONE }}
+  NEOLOADWEB_LGs: '2'
+  NEOLOADWEB_CONTROLLER_IMAGE: 'neotys/neoload-controller:9.2.1'
+  NEOLOADWEB_LG_IMAGE: 'neotys/neoload-loadgenerator:9.2.1'
 
 jobs:
   neoload_poc:
     permissions: write-all
     name: Neoload POC
     runs-on: ubuntu-latest
-    env:
-          NEOLOADWEB_URL: 'https://neoload-api.saas.neotys.com/'
-          NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
-          NEOLOADWEB_ZONE: ${{ secrets.NEOLOADWEB_ZONE }}
+
     steps:
     
       - name: Checkout
@@ -30,8 +33,10 @@ jobs:
         
       - name: "Set agents and controllers"
         run: |
-          neoload config set docker.lg.default_count=2
-          neoload config set docker.zone=${{ secrets.NEOLOADWEB_ZONE }}
+          neoload config set docker.lg.default_count=${{ env.NEOLOADWEB_ZONE }}
+          neoload config set docker.zone=${{ env.NEOLOADWEB_ZONE }}
+          neoload config set docker.controller.image=${{ env.NEOLOADWEB_ZONE }}
+          neoload config set docker.lg.image=${{ env.NEOLOADWEB_ZONE }}
           neoload docker up
         
       - name: "NeoLoad run test"
