@@ -78,7 +78,9 @@ jobs:
     steps:
       - env:
           test_guid: ${{needs.run_test_neoload_poc.outputs.output1}}
+        if: always()
         run: echo "test_guid"
         
       - name: "Add Test"
+        if: always()
         run: neoload test-results use "$test_guid"
