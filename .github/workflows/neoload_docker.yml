@@ -49,7 +49,7 @@ jobs:
           --external-url-label "Github Action Run ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --name "Docker Test - Github build ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --description "Neoload POC Docker" 
-          ${{ env.TEST_NAME }} >> "$GITHUB_OUTPUT"
+          ${{ env.TEST_NAME }}
           
       - name: "echo run test"
         run:  echo "$GITHUB_OUTPUT"
@@ -73,17 +73,3 @@ jobs:
             path: junit-sla.xml
             retention-days: 5
 
-  report_test_neoload_poc:
-    needs: run_test_neoload_poc
-    name: report for Neoload POC
-    runs-on: ubuntu-latest
-
-    steps:
-      - env:
-          test_guid: ${{needs.run_test_neoload_poc.outputs.output1}}
-        if: always()
-        run: echo "test_guid"
-        
-      - name: "Add Test"
-        if: always()
-        run: neoload test-results use "$test_guid"
