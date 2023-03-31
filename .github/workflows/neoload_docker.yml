@@ -35,7 +35,7 @@ jobs:
         run: |
           neoload config set docker.lg.default_count=${{ env.NEOLOADWEB_LG_COUNT }}
           neoload config set docker.zone=${{ env.NEOLOADWEB_ZONE }}
-          neoload config set docker.controller.image=${{ NEOLOADWEB_CONTROLLER_IMAGE }}
+          neoload config set docker.controller.image=${{ env.NEOLOADWEB_CONTROLLER_IMAGE }}
           neoload config set docker.lg.image=${{ env.NEOLOADWEB_LG_IMAGE }}
           neoload docker up
         
