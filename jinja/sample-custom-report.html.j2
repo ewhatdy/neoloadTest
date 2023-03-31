@@ -18,6 +18,8 @@ window.all_requests = {{ all_requests | selectattr('type','equalto', 'ALL_REQUES
 
 {% include 'common/general_details.html.j2' %}
 
+{% include 'common/slas.html.j2' %}
+
 {% include 'common/workload_characteristics.html.j2' %}
 
 {% include 'common/transactions.html.j2' %}

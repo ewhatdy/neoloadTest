@@ -1,0 +1,62 @@
+<h3>SLAs</h3>
+<table>
+<thead>
+<tr>
+<td>Category</td>
+<td>Name</td>
+<td>KPI</td>
+<td>operator</td>
+<td>value</td>
+<td>Status</td>
+<td>by value</td> 
+</td>
+</tr>
+</thead>
+<tbody>
+{% for element in sla_test %}
+<tr>
+<td>{{ element.element.category }}</td>
+<td>{{ element.element.name }}</td>
+<td>{{ element.kpi }}</td>
+<td>{{ element.failedThreshold.operator }}</td>
+<td>{{ element.failedThreshold.value }}</td>
+
+<td>{{ element.status }}</td>
+<td>{{ element.value }}</td>
+</tr>
+{% endfor %}
+
+{% for element in sla_interval %}
+<tr>
+<td>{{ element.element.category }}</td>
+<td>{{ element.element.name }}</td>
+<td>{{ element.kpi }}</td>
+<td>{{ element.failedThreshold.operator }}</td>
+<td>{{ element.failedThreshold.value }}</td>
+
+<td>{{ element.status }}</td>
+<td>{{ element.value }}</td>
+</tr>
+
+{% endfor %}
+
+{% for element in sla_global %}
+<tr>
+<td>{{ element.element.category }}</td>
+<td>{{ element.element.name }}</td>
+<td>{{ element.kpi }}</td>
+<td>{{ element.failedThreshold.operator }}</td>
+<td>{{ element.failedThreshold.value }}</td>
+
+<td>{{ element.status }}</td>
+<td>{{ element.value }}</td>
+</tr>
+
+{% endfor %}
+
+
+
+</tbody>
+</table>
+
+
