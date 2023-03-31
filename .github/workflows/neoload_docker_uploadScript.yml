@@ -4,6 +4,12 @@ env:
   TEST_NAME: '"NeoloadPOC"'
   WORKSPACE_NAME: '"Evolution"'
   VERSION: '9.2.1'
+  
+   # Neoload project repo variables
+  ACCESS_TOKEN_GITHUB: ${{ secrets.ACCESS_TOKEN_GITHUB }} 
+  PROJECT_REPO: 'boitcex/testNeoloadGit'
+  PROJECT_BRANCH: 'test'
+  PROJECT_PATH: ${{ github.workspace }}/project
 
 jobs:
   neoload_poc:
@@ -18,13 +24,14 @@ jobs:
     
       - name: Checkout
         uses: actions/checkout@v3
-        
+       
       - name: Checkout Neoload project
         uses: actions/checkout@v3
         with:
-          repository: boitcex/testNeoloadGit
-          path: ./project
-          token: ${{ secrets.ACCESS_TOKEN_GITHUB }}      
+          ref: ${{ env.PROJECT_BRANCH }} 
+          repository: ${{ env.PROJECT_REPO }} 
+          path: ${{ env.PROJECT_PATH }} 
+          token: ${{ env.ACCESS_TOKEN_GITHUB }}      
         
       - name: "Install NeoLoad CLI"
         run: |
@@ -35,6 +42,6 @@ jobs:
         run: neoload login --url ${{ env.NEOLOADWEB_URL}} --workspace ${{ env.WORKSPACE_NAME }} ${{ env.NEOLOADWEB_TOKEN }}
         
       - name: "Upload Neoload project"
-        run: neoload project --path ${{ github.workspace }}/project upload ${{ env.TEST_NAME }}
+        run: neoload project --path ${{ env.PROJECT_PATH }}  upload ${{ env.TEST_NAME }}
         
         
