@@ -1,0 +1,40 @@
+name: NeoLoad docker
+on: workflow_dispatch
+env:
+  TEST_NAME: '"NeoloadPOC"'
+  WORKSPACE_NAME: '"Evolution"'
+  VERSION: '9.2.1'
+
+jobs:
+  neoload_poc:
+    permissions: write-all
+    name: Neoload POC
+    runs-on: ubuntu-latest
+    env:
+          NEOLOADWEB_URL: 'https://neoload-api.saas.neotys.com/'
+          NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
+          NEOLOADWEB_ZONE: ${{ secrets.NEOLOADWEB_ZONE }}
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Checkout Neoload project
+        uses: actions/checkout@v3
+        with:
+          repository: boitcex/testNeoloadGit
+          path: ./project
+          token: ${{ secrets.ACCESS_TOKEN_GITHUB }}      
+        
+      - name: "Install NeoLoad CLI"
+        run: |
+          pip3 install -U neoload
+          neoload docker install
+        
+      - name: "NeoLoad Login"
+        run: neoload login --url ${{ env.NEOLOADWEB_URL}} --workspace ${{ env.WORKSPACE_NAME }} ${{ env.NEOLOADWEB_TOKEN }}
+        
+      - name: "Upload Neoload project"
+        run: neoload project --path ${{ github.workspace }}/project upload ${{ env.TEST_NAME }}
+        
+        
