@@ -12,9 +12,11 @@ env:
   NEOLOADWEB_LG_IMAGE: 'neotys/neoload-loadgenerator:9.2.1'
 
 jobs:
-  neoload_poc:
+  run_test_neoload_poc:
     permissions: write-all
-    name: Neoload POC
+    outputs:
+      output1: ${{ steps.Run_test.outputs.test }}
+    name: Run Neoload POC
     runs-on: ubuntu-latest
 
     steps:
@@ -40,6 +42,7 @@ jobs:
           neoload docker up
         
       - name: "NeoLoad run test"
+        id: Run_test
         run: >
           neoload run 
           --external-url $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID 
@@ -66,3 +69,16 @@ jobs:
             name: performance_report
             path: junit-sla.xml
             retention-days: 5
+
+  report_test_neoload_poc:
+    needs: run_test_neoload_poc
+    name: report for Neoload POC
+    runs-on: ubuntu-latest
+
+    steps:
+      - env:
+          test_guid: ${{needs.run_test_neoload_poc.outputs.output1}}
+        run: echo "test_guid"
+        
+      - name: "Add Test"
+        run: neoload test-results use "$test_guid"
