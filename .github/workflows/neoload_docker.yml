@@ -21,6 +21,7 @@ env:
 
 jobs:
   RUN_NEOLOAD:
+    permissions: write-all
     runs-on: ubuntu-latest
 
     steps:
