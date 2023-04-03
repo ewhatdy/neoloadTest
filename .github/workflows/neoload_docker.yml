@@ -76,7 +76,7 @@ jobs:
           
       - name: "Add Test"
         if: always()
-        run: neoload test-results use "${{ steps.Run_test.outputs.TEST_GUID }}"
+        run: neoload test-results use ${{ steps.Run_test.outputs.TEST_GUID }}
         
       - name: "Generate Raw data"
         if: always()
@@ -87,7 +87,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Raw_data
-          path: raw_data_"${{ steps.Run_test.outputs.TEST_GUID }}".json
+          path: raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json
         
       - name: "Generate transaction data"
         if: always()
