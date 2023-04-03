@@ -19,7 +19,7 @@ env:
 
 
 jobs:
-  PREPARE:
+  RUN_NEOLOAD:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,12 +44,6 @@ jobs:
           neoload config set docker.lg.image=${{ env.NEOLOADWEB_LG_IMAGE }}
           neoload docker up
   
-  RUN:
-    runs-on: ubuntu-latest
-    needs: PREPARE
-    outputs:
-      test_guid: ${{ steps.Run_test.outputs.test }}
-    steps:
       - name: "NeoLoad run test"
         id: Run_test
         continue-on-error: true
@@ -68,65 +62,56 @@ jobs:
           echo "${{ steps.Run_test.outputs.TEST_GUID }}"
           echo $TEST_GUID
 
-  REPORT:
-    runs-on: ubuntu-latest
-    needs: [PREPARE, RUN]
-    steps:      
       - name: "Generate Test Report"
         continue-on-error: true
         run: neoload test-results junitsla
 
       - name: "Publish Test Report"
-        if: always()
+        continue-on-error: true
         uses: scacap/action-surefire-report@v1
         with:
           report_paths:  junit-sla.xml
           fail_on_test_failures: true
           
       - name: "Add Test"
-        if: always()
+        continue-on-error: true
         run: neoload test-results use "${{ steps.Run_test.outputs.TEST_GUID }}"
         
       - name: "Generate Raw data"
-        if: always()
+        continue-on-error: true
         run: neoload report --out-file raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json
         
    #   - name: "Upload Raw data"
-   #     if: always()
+   #     continue-on-error: true
    #     uses: actions/upload-artifact@v3
    #     with:
    #       name: Raw_data
    #       path: raw_data_"${{ steps.Run_test.outputs.TEST_GUID }}".json
         
       - name: "Generate transaction data"
-        if: always()
+        continue-on-error: true
         run: neoload report --json-in raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json --template builtin:transactions-csv --out-file transactions_${{ steps.Run_test.outputs.TEST_GUID }}.csv
         
    #   - name: "Upload Transaction data"
-   #     if: always()
+   #     continue-on-error: true
    #     uses: actions/upload-artifact@v3
    #     with:
    #       name: transactions
    #       path: transactions_${{ steps.Run_test.outputs.TEST_GUID }}.csv
           
     #  - name: "Generate HTML Report"
-    #    if: always()
+    #    continue-on-error: true
     #    run: neoload report --json-in raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json --template tests/resources/jinja/sample-custom-report.html.j2 --out-file report_${{ steps.Run_test.outputs.TEST_GUID }}.html
         
     #  - name: "Upload HTML Report"
-    #    if: always()
+    #    continue-on-error: true
     #    uses: actions/upload-artifact@v3
     #    with:
     #      name: report
     #      path: report_${{ steps.Run_test.outputs.TEST_GUID }}.html
 
-  UPLOAD:
-    runs-on: ubuntu-latest
-    needs: REPORT
-
-    steps:
       - name: "Upload All"
-        if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v3
         with:
           name: all
