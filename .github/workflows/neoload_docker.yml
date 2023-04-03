@@ -50,7 +50,7 @@ jobs:
           --external-url-label "Github Action Run ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --name "Docker Test - Github build ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --description "Neoload POC Docker" 
-          ${{ env.TEST_NAME }} | head -n 1 | sed -r 's/^.{14}//')"
+          ${{ env.TEST_NAME }} | head -n 1 | sed -r 's/^.{14}//')" >> '$GITHUB_OUTPUT'
           
       - name: "echo run test"
         if: always()
@@ -66,12 +66,46 @@ jobs:
         with:
           report_paths:  junit-sla.xml
           fail_on_test_failures: true
+          
+      - name: "Add Test"
+        run: neoload test-results use "${{ steps.Run_test.outputs.TEST_GUID }}"
         
-      - name: 'Upload Artifact'
-        if: always()
+      - name: "Generate Raw data"
+        run: neoload report --out-file raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json
+        
+      - name: "Upload Raw data"
         uses: actions/upload-artifact@v3
         with:
-            name: performance_report
-            path: junit-sla.xml
-            retention-days: 5
+          name: Raw_data
+          path: raw_data_"${{ steps.Run_test.outputs.TEST_GUID }}".json
+        
+      - name: "Generate transaction data"
+        run: neoload report --json-in raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json --template builtin:transactions-csv --out-file transactions_${{ steps.Run_test.outputs.TEST_GUID }}.csv
+        
+      - name: "Upload Transaction data"
+        uses: actions/upload-artifact@v3
+        with:
+          name: transactions
+          path: transactions_${{ steps.Run_test.outputs.TEST_GUID }}.csv
+          
+      - name: "Generate HTML Report"
+        run: neoload report --json-in raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json --template jinja/sample-custom-report.html.j2 --out-file report_${{ steps.Run_test.outputs.TEST_GUID }}.html
+        
+      - name: "Upload HTML Report"
+        uses: actions/upload-artifact@v3
+        with:
+          name: report
+          path: report_${{ steps.Run_test.outputs.TEST_GUID }}.html
+
+
+      - name: "Upload All"
+        uses: actions/upload-artifact@v3
+        with:
+          name: all
+          path: |
+            raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json
+            transactions_${{ steps.Run_test.outputs.TEST_GUID }}.csv
+            report_${{ steps.Run_test.outputs.TEST_GUID }}.html
+            junit-sla_${{ steps.Run_test.outputs.TEST_GUID }}.xml
+        
 
