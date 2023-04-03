@@ -52,6 +52,7 @@ jobs:
           ${{ env.TEST_NAME }} | head -n 1 | sed -r 's/^.{14}//' >> "$GITHUB_OUTPUT"
           
       - name: "echo run test"
+        if: always()
         run:  echo "$GITHUB_OUTPUT"
         
       - name: "Generate Test Report"
