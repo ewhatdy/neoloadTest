@@ -8,7 +8,8 @@ on:
         type: string
         default: 'NeoloadPOC'
 env: 
-  WORKSPACE_NAME: '"Evolution"'
+  WORKSPACE_NAME: 'Evolution'
+  SCENARIO: 'scenarioPOC'
   VERSION: '9.2.1'
   NEOLOADWEB_URL: 'https://neoload-api.saas.neotys.com/'
   NEOLOADWEB_TOKEN: ${{ secrets.NEOLOADWEB_TOKEN }}
@@ -46,7 +47,8 @@ jobs:
   
       - name: "NeoLoad run test"
         id: Run_test
-        run: >
+        run: |
+          neoload test-settings --zone ${{ env.NEOLOADWEB_ZONE }} --lgs ${{ env.NEOLOADWEB_LG_COUNT }} --scenario ${{ env.SCENARIO }}
           echo "TEST_GUID=$(
           neoload run 
           --external-url $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID 
