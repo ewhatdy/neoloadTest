@@ -52,9 +52,11 @@ jobs:
           --description "Neoload POC Docker" 
           ${{ env.TEST_NAME }} | head -n 1 | sed -r 's/^.{14}//')"
           
-      - name: "echo run test"
+      - name: "save test guid"
         if: always()
-        run:  echo "${{ steps.Run_test.outputs.TEST_GUID }}"
+        run: |
+          echo "${{ steps.Run_test.outputs.TEST_GUID }}" >> $TEST_GUID
+          echo "$TEST_GUID"
         
       - name: "Generate Test Report"
         if: always()
@@ -75,34 +77,34 @@ jobs:
         if: always()
         run: neoload report --out-file raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json
         
-      - name: "Upload Raw data"
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: Raw_data
-          path: raw_data_"${{ steps.Run_test.outputs.TEST_GUID }}".json
+   #   - name: "Upload Raw data"
+   #     if: always()
+   #     uses: actions/upload-artifact@v3
+   #     with:
+   #       name: Raw_data
+   #       path: raw_data_"${{ steps.Run_test.outputs.TEST_GUID }}".json
         
       - name: "Generate transaction data"
         if: always()
         run: neoload report --json-in raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json --template builtin:transactions-csv --out-file transactions_${{ steps.Run_test.outputs.TEST_GUID }}.csv
         
-      - name: "Upload Transaction data"
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: transactions
-          path: transactions_${{ steps.Run_test.outputs.TEST_GUID }}.csv
+   #   - name: "Upload Transaction data"
+   #     if: always()
+   #     uses: actions/upload-artifact@v3
+   #     with:
+   #       name: transactions
+   #       path: transactions_${{ steps.Run_test.outputs.TEST_GUID }}.csv
           
-      - name: "Generate HTML Report"
-        if: always()
-        run: neoload report --json-in raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json --template tests/resources/jinja/sample-custom-report.html.j2 --out-file report_${{ steps.Run_test.outputs.TEST_GUID }}.html
+    #  - name: "Generate HTML Report"
+    #    if: always()
+    #    run: neoload report --json-in raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json --template tests/resources/jinja/sample-custom-report.html.j2 --out-file report_${{ steps.Run_test.outputs.TEST_GUID }}.html
         
-      - name: "Upload HTML Report"
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: report
-          path: report_${{ steps.Run_test.outputs.TEST_GUID }}.html
+    #  - name: "Upload HTML Report"
+    #    if: always()
+    #    uses: actions/upload-artifact@v3
+    #    with:
+    #      name: report
+    #      path: report_${{ steps.Run_test.outputs.TEST_GUID }}.html
 
 
       - name: "Upload All"
