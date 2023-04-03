@@ -6,7 +6,7 @@ on:
         description: 'Neoload test name'
         required: true
         type: string
-        default: '"NeoloadPOC"'
+        default: 'NeoloadPOC'
 env: 
   WORKSPACE_NAME: '"Evolution"'
   VERSION: '9.2.1'
@@ -22,7 +22,7 @@ jobs:
   run_test_neoload_poc:
     permissions: write-all
     outputs:
-      output1: ${{ steps.Run_test.outputs.test }}
+      test_guid: ${{ steps.Run_test.outputs.test }}
     name: Run Neoload POC
     runs-on: ubuntu-latest
 
