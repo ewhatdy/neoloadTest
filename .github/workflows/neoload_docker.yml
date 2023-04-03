@@ -100,16 +100,16 @@ jobs:
           name: transactions
           path: transactions_${{ steps.Run_test.outputs.TEST_GUID }}.csv
           
-      - name: "Generate HTML Report"
-        if: always()
-        run: neoload report --json-in raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json --template tests/resources/jinja/sample-custom-report.html.j2 --out-file report_${{ steps.Run_test.outputs.TEST_GUID }}.html
+    #  - name: "Generate HTML Report"
+    #    if: always()
+    #    run: neoload report --json-in raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json --template tests/resources/jinja/sample-custom-report.html.j2 --out-file report_${{ steps.Run_test.outputs.TEST_GUID }}.html
         
-      - name: "Upload HTML Report"
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: report
-          path: report_${{ steps.Run_test.outputs.TEST_GUID }}.html
+    #  - name: "Upload HTML Report"
+    #    if: always()
+    #    uses: actions/upload-artifact@v3
+    #    with:
+    #      name: report
+    #      path: report_${{ steps.Run_test.outputs.TEST_GUID }}.html
 
       - name: "Upload All"
         if: always()
