@@ -44,16 +44,17 @@ jobs:
       - name: "NeoLoad run test"
         id: Run_test
         run: >
+          echo "::set-output name=TEST_GUID::$(
           neoload run 
           --external-url $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID 
           --external-url-label "Github Action Run ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --name "Docker Test - Github build ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --description "Neoload POC Docker" 
-          ${{ env.TEST_NAME }} | head -n 1 | sed -r 's/^.{14}//' >> "$GITHUB_OUTPUT"
+          ${{ env.TEST_NAME }} | head -n 1 | sed -r 's/^.{14}//')"
           
       - name: "echo run test"
         if: always()
-        run:  echo "$GITHUB_OUTPUT"
+        run:  echo "${{ steps.Run_test.outputs.TEST_GUID }}"
         
       - name: "Generate Test Report"
         if: always()
