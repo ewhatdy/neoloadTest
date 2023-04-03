@@ -58,7 +58,7 @@ jobs:
           --scenario ${{ env.SCENARIO }}
           ${{ inputs.TEST_NAME }} | head -n 1 | sed -r 's/^.{14}//')" >> $GITHUB_OUTPUT
           
-      - name: "print test id"
+      - name: "Print test id"
         if: always()
         run: |
           echo "${{ steps.Run_test.outputs.TEST_GUID }}"
@@ -73,6 +73,13 @@ jobs:
         with:
           report_paths:  junit-sla.xml
           fail_on_test_failures: true
+          
+      - name: "Upload Sla report"
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: junit-sla
+          path: junit-sla.xml
           
       - name: "Add Test"
         if: always()
