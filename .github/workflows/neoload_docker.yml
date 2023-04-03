@@ -70,7 +70,7 @@ jobs:
         if: always()
         uses: scacap/action-surefire-report@v1
         with:
-          report_paths:  junit-sla__${{ steps.Run_test.outputs.TEST_GUID }}.xml
+          report_paths:  junit-sla.xml
           fail_on_test_failures: true
           
       - name: "Add Test"
@@ -93,7 +93,7 @@ jobs:
         run: neoload report --json-in raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json --template builtin:transactions-csv --out-file transactions_${{ steps.Run_test.outputs.TEST_GUID }}.csv
         
       - name: "Upload Transaction data"
-        continue-on-error: true
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: transactions
@@ -119,6 +119,6 @@ jobs:
             raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json
             transactions_${{ steps.Run_test.outputs.TEST_GUID }}.csv
             report_${{ steps.Run_test.outputs.TEST_GUID }}.html
-            junit-sla_${{ steps.Run_test.outputs.TEST_GUID }}.xml
+            junit-sla.xml
         
 
