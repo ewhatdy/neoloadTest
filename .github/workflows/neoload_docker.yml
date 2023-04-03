@@ -46,7 +46,6 @@ jobs:
   
       - name: "NeoLoad run test"
         id: Run_test
-        continue-on-error: true
         run: >
           echo "TEST_GUID=$(
           neoload run 
@@ -56,40 +55,39 @@ jobs:
           --description "Neoload POC Docker" 
           ${{ inputs.TEST_NAME }} | head -n 1 | sed -r 's/^.{14}//')" >> $GITHUB_OUTPUT
           
-      - name: "save test guid"
-        continue-on-error: true
+      - name: "print test id"
+        if: always()
         run: |
           echo "${{ steps.Run_test.outputs.TEST_GUID }}"
-          echo $TEST_GUID
 
       - name: "Generate Test Report"
-        continue-on-error: true
+        if: always()
         run: neoload test-results junitsla
 
       - name: "Publish Test Report"
-        continue-on-error: true
+        if: always()
         uses: scacap/action-surefire-report@v1
         with:
           report_paths:  junit-sla.xml
           fail_on_test_failures: true
           
       - name: "Add Test"
-        continue-on-error: true
+        if: always()
         run: neoload test-results use "${{ steps.Run_test.outputs.TEST_GUID }}"
         
       - name: "Generate Raw data"
-        continue-on-error: true
+        if: always()
         run: neoload report --out-file raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json
         
    #   - name: "Upload Raw data"
-   #     continue-on-error: true
+   #     if: always()
    #     uses: actions/upload-artifact@v3
    #     with:
    #       name: Raw_data
    #       path: raw_data_"${{ steps.Run_test.outputs.TEST_GUID }}".json
         
       - name: "Generate transaction data"
-        continue-on-error: true
+        if: always()
         run: neoload report --json-in raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json --template builtin:transactions-csv --out-file transactions_${{ steps.Run_test.outputs.TEST_GUID }}.csv
         
    #   - name: "Upload Transaction data"
@@ -100,18 +98,18 @@ jobs:
    #       path: transactions_${{ steps.Run_test.outputs.TEST_GUID }}.csv
           
     #  - name: "Generate HTML Report"
-    #    continue-on-error: true
+    #    if: always()
     #    run: neoload report --json-in raw_data_${{ steps.Run_test.outputs.TEST_GUID }}.json --template tests/resources/jinja/sample-custom-report.html.j2 --out-file report_${{ steps.Run_test.outputs.TEST_GUID }}.html
         
     #  - name: "Upload HTML Report"
-    #    continue-on-error: true
+    #    if: always()
     #    uses: actions/upload-artifact@v3
     #    with:
     #      name: report
     #      path: report_${{ steps.Run_test.outputs.TEST_GUID }}.html
 
       - name: "Upload All"
-        continue-on-error: true
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: all
