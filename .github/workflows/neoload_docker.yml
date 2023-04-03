@@ -56,7 +56,7 @@ jobs:
         if: always()
         run: |
           echo "${{ steps.Run_test.outputs.TEST_GUID }}" >> $TEST_GUID
-          echo "$TEST_GUID"
+          echo $TEST_GUID
         
       - name: "Generate Test Report"
         if: always()
