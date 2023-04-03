@@ -19,11 +19,7 @@ env:
 
 
 jobs:
-  run_test_neoload_poc:
-    permissions: write-all
-    outputs:
-      test_guid: ${{ steps.Run_test.outputs.test }}
-    name: Run Neoload POC
+  PREPARE:
     runs-on: ubuntu-latest
 
     steps:
@@ -47,7 +43,12 @@ jobs:
           neoload config set docker.controller.image=${{ env.NEOLOADWEB_CONTROLLER_IMAGE }}
           neoload config set docker.lg.image=${{ env.NEOLOADWEB_LG_IMAGE }}
           neoload docker up
-        
+  
+  RUN:
+    runs-on: ubuntu-latest
+    outputs:
+      test_guid: ${{ steps.Run_test.outputs.test }}
+    steps:
       - name: "NeoLoad run test"
         id: Run_test
         continue-on-error: true
@@ -66,7 +67,9 @@ jobs:
           echo "${{ steps.Run_test.outputs.TEST_GUID }}"
           echo $TEST_GUID
 
-        
+  REPORT:
+    runs-on: ubuntu-latest
+    steps:      
       - name: "Generate Test Report"
         continue-on-error: true
         run: neoload test-results junitsla
@@ -115,7 +118,9 @@ jobs:
     #      name: report
     #      path: report_${{ steps.Run_test.outputs.TEST_GUID }}.html
 
-
+  UPLOAD:
+    runs-on: ubuntu-latest
+    steps:
       - name: "Upload All"
         if: always()
         uses: actions/upload-artifact@v3
