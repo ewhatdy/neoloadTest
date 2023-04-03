@@ -49,7 +49,7 @@ jobs:
           --external-url-label "Github Action Run ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --name "Docker Test - Github build ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --description "Neoload POC Docker" 
-          ${{ env.TEST_NAME }}
+          ${{ env.TEST_NAME }} | head -n 1 | sed -r 's/^.{14}//' >> "$GITHUB_OUTPUT"
           
       - name: "echo run test"
         run:  echo "$GITHUB_OUTPUT"
