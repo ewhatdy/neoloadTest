@@ -1,7 +1,13 @@
 name: NeoLoad docker
-on: workflow_dispatch
-env:
-  TEST_NAME: '"NeoloadPOC"'
+on: 
+  workflow_dispatch:
+    inputs:
+      TEST_NAME: 
+        description: 'Neoload test name'
+        required: true
+        type: string
+        default: '"NeoloadPOC"'
+env: 
   WORKSPACE_NAME: '"Evolution"'
   VERSION: '9.2.1'
   NEOLOADWEB_URL: 'https://neoload-api.saas.neotys.com/'
@@ -10,6 +16,7 @@ env:
   NEOLOADWEB_LG_COUNT: '2'
   NEOLOADWEB_CONTROLLER_IMAGE: 'neotys/neoload-controller:9.2.1'
   NEOLOADWEB_LG_IMAGE: 'neotys/neoload-loadgenerator:9.2.1'
+
 
 jobs:
   run_test_neoload_poc:
@@ -43,23 +50,25 @@ jobs:
         
       - name: "NeoLoad run test"
         id: Run_test
+        continue-on-error: true
         run: >
-          echo "::set-output name=TEST_GUID::$(
+          echo "TEST_GUID=$(
           neoload run 
           --external-url $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID 
           --external-url-label "Github Action Run ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --name "Docker Test - Github build ${{ env.VERSION }}.$GITHUB_RUN_NUMBER" 
           --description "Neoload POC Docker" 
-          ${{ env.TEST_NAME }} | head -n 1 | sed -r 's/^.{14}//')"
+          ${{ inputs.TEST_NAME }} | head -n 1 | sed -r 's/^.{14}//')" >> $GITHUB_OUTPUT
           
       - name: "save test guid"
-        if: always()
+        continue-on-error: true
         run: |
-          echo "${{ steps.Run_test.outputs.TEST_GUID }}" >> $TEST_GUID
+          echo "${{ steps.Run_test.outputs.TEST_GUID }}"
           echo $TEST_GUID
+
         
       - name: "Generate Test Report"
-        if: always()
+        continue-on-error: true
         run: neoload test-results junitsla
 
       - name: "Publish Test Report"
