@@ -45,6 +45,7 @@ jobs:
           neoload docker up
   
   RUN:
+    needs: PREPARE
     runs-on: ubuntu-latest
     outputs:
       test_guid: ${{ steps.Run_test.outputs.test }}
@@ -68,6 +69,7 @@ jobs:
           echo $TEST_GUID
 
   REPORT:
+    needs: [PREPARE, RUN]
     runs-on: ubuntu-latest
     steps:      
       - name: "Generate Test Report"
@@ -119,6 +121,7 @@ jobs:
     #      path: report_${{ steps.Run_test.outputs.TEST_GUID }}.html
 
   UPLOAD:
+    needs: REPORT
     runs-on: ubuntu-latest
     steps:
       - name: "Upload All"
