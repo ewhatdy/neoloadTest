@@ -1,13 +1,67 @@
 <h3>Transaction Trends</h3>
 {% if (unique_transactions is defined) and unique_transactions %}
 
-<div class="clearfix" style="margin-bottom:2em;">
-  <div id="dTransactionTrends" class="graph" style="height:300px;background:#eee;"></div>
+<div class="clearfix" style="margin-bottom:5em;background:#eee">
+
+<div id="dTransactionTrendsCnt" class="graph" style="height:300px;width:20%;margin-bottom:2em;display:inline-block;float:left;">
+<h2>Count</h2>
 </div>
+<script type="text/javascript">
+
+appendOnLoad(function() {
+  var data = {{ unique_transactions | batch(5) | first | tojson }};
+  graphTrends(d3.select('#dTransactionTrendsCnt'), data, window.results_colors,
+    (group) => group.name, // name of bar group
+    (group) => group.results, // list of bars under group
+    (child) => child.id, // id of bar
+    (child) => child.name, // name of bar
+    (bar) => (bar.elements.length > 0 ? bar.elements[0].aggregate.count : 0)
+  )
+})
+</script>
+
+<div id="dTransactionTrendsAvg" class="graph" style="height:300px;width:20%;margin-bottom:2em;display:inline-block;float:left;">
+<h2>Avg</h2>
+</div>
+<script type="text/javascript">
+
+appendOnLoad(function() {
+  var data = {{ unique_transactions | batch(5) | first | tojson }};
+  graphTrends(d3.select('#dTransactionTrendsAvg'), data, window.results_colors,
+    (group) => group.name, // name of bar group
+    (group) => group.results, // list of bars under group
+    (child) => child.id, // id of bar
+    (child) => child.name, // name of bar
+    (bar) => (bar.elements.length > 0 ? bar.elements[0].aggregate.avgDuration : 0)
+  )
+})
+</script>
+
+<div id="dTransactionTrends50" class="graph" style="height:300px;width:20%;margin-bottom:2em;display:inline-block;float:left;">
+<h2>P50</h2>
+</div>
+
 <script type="text/javascript">
 appendOnLoad(function() {
   var data = {{ unique_transactions | batch(5) | first | tojson }};
-  graphTrends(d3.select('#dTransactionTrends'), data, window.results_colors,
+  graphTrends(d3.select('#dTransactionTrends50'), data, window.results_colors,
+    (group) => group.name, // name of bar group
+    (group) => group.results, // list of bars under group
+    (child) => child.id, // id of bar
+    (child) => child.name, // name of bar
+    (bar) => (bar.elements.length > 0 ? bar.elements[0].aggregate.percentile50 : 0)
+  )
+})
+</script>
+
+<div id="dTransactionTrends95" class="graph" style="height:300px;width:20%;margin-bottom:2em;display:inline-block;float:left;">
+<h2>P95</h2>
+</div>
+<script type="text/javascript">
+
+appendOnLoad(function() {
+  var data = {{ unique_transactions | batch(5) | first | tojson }};
+  graphTrends(d3.select('#dTransactionTrends95'), data, window.results_colors,
     (group) => group.name, // name of bar group
     (group) => group.results, // list of bars under group
     (child) => child.id, // id of bar
@@ -16,6 +70,25 @@ appendOnLoad(function() {
   )
 })
 </script>
+
+<div id="dTransactionTrendsErr" class="graph" style="height:300px;width:20%;margin-bottom:3em;display:inline-block;float:left;">
+<h2>Err rate</h2>
+</div>
+
+<script type="text/javascript">
+appendOnLoad(function() {
+  var data = {{ unique_transactions | batch(5) | first | tojson }};
+  graphTrends(d3.select('#dTransactionTrendsErr'), data, window.results_colors,
+    (group) => group.name, // name of bar group
+    (group) => group.results, // list of bars under group
+    (child) => child.id, // id of bar
+    (child) => child.name, // name of bar
+    (bar) => (bar.elements.length > 0 ? bar.elements[0].aggregate.failureRate : 0)
+  )
+})
+</script>
+</div>
+  
 <script type="text/javascript">
 function graphTrends(el, data, subgroup_colors, fGroupName, fGroupChildren, fChildId, fChildName, fChildValue) {
   // set the dimensions and margins of the graph
@@ -156,11 +229,20 @@ function handleMouseOutBar(d, i) {
 <thead>
 <tr>
 <td>Transaction Name</td>
-<td>Max Avg Dur</td>
-<td>Max p95</td>
-<td>Max p99</td>
+{% for result in results | sort(attribute='startDate') %}
+<td>({{result.index}}) Count</td>
+{% endfor %}
+{% for result in results | sort(attribute='startDate') %}
+<td>({{result.index}}) Avg</td>
+{% endfor %}
+{% for result in results | sort(attribute='startDate') %}
+<td>({{result.index}}) p50</td>
+{% endfor %}
 {% for result in results | sort(attribute='startDate') %}
 <td>({{result.index}}) p95</td>
+{% endfor %}
+{% for result in results | sort(attribute='startDate') %}
+<td>({{result.index}}) Err rate</td>
 {% endfor %}
 </tr>
 </thead>
@@ -168,13 +250,61 @@ function handleMouseOutBar(d, i) {
 {% for group in unique_transactions | sort(attribute='max_percentile95',reverse=true) %}
 <tr>
 <td>{{group.name}}</td>
-<td>{{group.aggregate.max_avgDuration}}</td>
-<td>{{group.aggregate.max_percentile95}}</td>
-<td>{{group.aggregate.max_percentile99}}</td>
+{# <td>{{group.aggregate.max_avgDuration}}</td> #}
 {% for r in results | sort(attribute='startDate') %}
 <td id="td_pN_{{r.id}}" data-transaction-name="{{group.name}}" data-result-id="{{r.id}}">
 {% for result in group.results | selectattr('id', 'equalto', r.id) %}
-{% if result.elements|length > 0 %}{{result.elements[0].aggregate.percentile95}}{% else %}0{% endif %}
+{% if result.elements|length > 0 %}{{result.elements[0].aggregate.count}}{% else %}NaN{% endif %}
+{% endfor %}
+<script type="text/javascript">
+d3.selectAll("#td_pN_{{r.id}}")
+    .style("color",window.results_colors[{{r.index}}].color)
+</script>
+</td>
+{% endfor %}
+
+{% for r in results | sort(attribute='startDate') %}
+<td id="td_pN_{{r.id}}" data-transaction-name="{{group.name}}" data-result-id="{{r.id}}">
+{% for result in group.results | selectattr('id', 'equalto', r.id) %}
+{% if result.elements|length > 0 %}{{result.elements[0].aggregate.avgDuration}}{% else %}NaN{% endif %}
+{% endfor %}
+<script type="text/javascript">
+d3.selectAll("#td_pN_{{r.id}}")
+    .style("color",window.results_colors[{{r.index}}].color)
+</script>
+</td>
+{% endfor %}
+{# <td>{{group.aggregate.max_percentile95}}</td>
+<td>{{group.aggregate.max_percentile99}}</td>
+<td>{{group.aggregate.max_percentile99}}</td> #}
+{% for r in results | sort(attribute='startDate') %}
+<td id="td_pN_{{r.id}}" data-transaction-name="{{group.name}}" data-result-id="{{r.id}}">
+{% for result in group.results | selectattr('id', 'equalto', r.id) %}
+{% if result.elements|length > 0 %}{{result.elements[0].aggregate.percentile50}}{% else %}NaN{% endif %}
+{% endfor %}
+<script type="text/javascript">
+d3.selectAll("#td_pN_{{r.id}}")
+    .style("color",window.results_colors[{{r.index}}].color)
+</script>
+</td>
+{% endfor %}
+
+{% for r in results | sort(attribute='startDate') %}
+<td id="td_pN_{{r.id}}" data-transaction-name="{{group.name}}" data-result-id="{{r.id}}">
+{% for result in group.results | selectattr('id', 'equalto', r.id) %}
+{% if result.elements|length > 0 %}{{result.elements[0].aggregate.percentile95}}{% else %}NaN{% endif %}
+{% endfor %}
+<script type="text/javascript">
+d3.selectAll("#td_pN_{{r.id}}")
+    .style("color",window.results_colors[{{r.index}}].color)
+</script>
+</td>
+{% endfor %}
+
+{% for r in results | sort(attribute='startDate') %}
+<td id="td_pN_{{r.id}}" data-transaction-name="{{group.name}}" data-result-id="{{r.id}}">
+{% for result in group.results | selectattr('id', 'equalto', r.id) %}
+{% if result.elements|length > 0 %}{{result.elements[0].aggregate.failureRate}}{% else %}NaN{% endif %}
 {% endfor %}
 <script type="text/javascript">
 d3.selectAll("#td_pN_{{r.id}}")
